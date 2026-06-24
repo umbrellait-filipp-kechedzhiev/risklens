@@ -2,14 +2,15 @@
 
 import { ShieldAlert } from "lucide-react";
 import Link from "next/link";
-import { use, useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { AppShell } from "@/components/shell";
 import { Button, Card } from "@/components/ui";
 import { api } from "@/lib/api";
 import { labelFor } from "@/lib/labels";
 
-export default function ProjectPage({ params }: { params: Promise<{ projectId: string }> }) {
-  const { projectId } = use(params);
+export default function ProjectPage() {
+  const { projectId } = useParams<{ projectId: string }>();
   const [project, setProject] = useState<any>(null);
   const [reviews, setReviews] = useState<any[]>([]);
   useEffect(() => {

@@ -33,6 +33,10 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
   });
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: "Запрос не выполнен" }));
+    if (response.status === 401 && typeof window !== "undefined") {
+      clearSession();
+      window.location.href = "/login";
+    }
     throw new Error(error.message ?? "Запрос не выполнен");
   }
   const contentType = response.headers.get("content-type") ?? "";

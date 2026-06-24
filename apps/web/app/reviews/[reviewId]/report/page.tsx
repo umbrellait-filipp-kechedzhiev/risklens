@@ -2,7 +2,8 @@
 
 import type { Risk, RiskReport } from "@risklens/shared";
 import { Download, X } from "lucide-react";
-import { use, useEffect, useMemo, useState } from "react";
+import { useParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { CartesianGrid, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from "recharts";
 import { AppShell } from "@/components/shell";
 import { Badge, Button, Card } from "@/components/ui";
@@ -10,8 +11,8 @@ import { api } from "@/lib/api";
 import { categoryLabels, labelFor } from "@/lib/labels";
 import { levelClass } from "@/lib/utils";
 
-export default function ReportPage({ params }: { params: Promise<{ reviewId: string }> }) {
-  const { reviewId } = use(params);
+export default function ReportPage() {
+  const { reviewId } = useParams<{ reviewId: string }>();
   const [report, setReport] = useState<RiskReport | null>(null);
   const [selected, setSelected] = useState<Risk | null>(null);
   const [exported, setExported] = useState("");

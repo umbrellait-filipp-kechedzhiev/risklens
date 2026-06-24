@@ -2,8 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, ArrowRight, Wand2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { use, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { AppShell } from "@/components/shell";
@@ -55,8 +55,8 @@ const checkboxLabels: Record<string, string> = {
   performanceCritical: "Критична производительность"
 };
 
-export default function NewReviewPage({ params }: { params: Promise<{ projectId: string }> }) {
-  const { projectId } = use(params);
+export default function NewReviewPage() {
+  const { projectId } = useParams<{ projectId: string }>();
   const router = useRouter();
   const [step, setStep] = useState(0);
   const form = useForm<FormData>({
