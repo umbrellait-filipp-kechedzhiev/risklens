@@ -1,0 +1,20 @@
+{
+  "name": "risklens",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w @risklens/api\" \"npm run dev -w @risklens/web\"",
+    "build": "npm run build -w @risklens/shared && npm run build -w @risklens/api && npm run build -w @risklens/web",
+    "typecheck": "npm run typecheck -w @risklens/shared && npm run typecheck -w @risklens/api && npm run typecheck -w @risklens/web",
+    "db:migrate": "npm run db:migrate -w @risklens/api",
+    "db:generate": "npm run db:generate -w @risklens/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "typescript": "^5.7.3"
+  }
+}

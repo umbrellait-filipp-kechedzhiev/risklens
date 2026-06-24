@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String            @id @default(cuid())
+  email        String            @unique
+  name         String
+  passwordHash String
+  memberships  WorkspaceMember[]
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+}
+
+model Workspace {
+  id        String            @id @default(cuid())
+  name      String
+  members   WorkspaceMember[]
+  projects  Project[]
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+model WorkspaceMember {
+  id          String    @id @default(cuid())
+  role        String
+  userId      String
+  workspaceId String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+
+  @@unique([userId, workspaceId])
+}
+
+model Project {
+  id                  String       @id @default(cuid())
+  workspaceId         String
+  name                String
+  description         String
+  projectType         String
+  stage               String
+  deliveryModel       String
+  businessCriticality String
+  workspace           Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  reviews             RiskReview[]
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+}
+
+model RiskReview {
+  id               String       @id @default(cuid())
+  projectId        String
+  status           String       @default("draft")
+  overallScore     Float?
+  riskLevel        String?
+  executiveSummary String?
+  project          Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  answer           RiskAnswer?
+  risks            Risk[]
+  actionItems      ActionItem[]
+  exports          ReportExport[]
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+}
+
+model RiskAnswer {
+  id        String     @id @default(cuid())
+  reviewId  String     @unique
+  answers   Json
+  review    RiskReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Risk {
+  id                  String     @id @default(cuid())
+  reviewId            String
+  name                String
+  category            String
+  description         String
+  cause               String
+  consequence         String
+  probability         Int
+  impact              Int
+  urgency             Int
+  score               Int
+  level               String
+  confidence          String
+  mitigation          Json
+  contingency         String
+  earlyWarningSignals Json
+  ownerSuggestion     String
+  status              String     @default("open")
+  review              RiskReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+}
+
+model ActionItem {
+  id              String     @id @default(cuid())
+  reviewId        String
+  title           String
+  description     String
+  ownerSuggestion String
+  priority        String
+  dueInDays       Int
+  review          RiskReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model ReportExport {
+  id        String     @id @default(cuid())
+  reviewId  String
+  format    String
+  sections  Json
+  content   String
+  review    RiskReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+}
