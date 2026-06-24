@@ -24,6 +24,18 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
   } catch {
     return reply.code(401).send({ message: "Необходима авторизация" });
   }
+
+  const membership = await prisma.workspaceMember.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId: request.user.id,
+        workspaceId: request.user.workspaceId
+      }
+    }
+  });
+  if (!membership) {
+    return reply.code(401).send({ message: "Сессия устарела. Войдите заново." });
+  }
 }
 
 export async function authRoutes(app: FastifyInstance) {
@@ -62,6 +74,9 @@ export async function authRoutes(app: FastifyInstance) {
     const user = await prisma.user.findUnique({ where: { email: body.email }, include: { memberships: true } });
     if (!user || !(await bcrypt.compare(body.password, user.passwordHash))) {
       return reply.code(401).send({ message: "Неверный email или пароль" });
+    }
+    if (!user.memberships[0]) {
+      return reply.code(403).send({ message: "Для пользователя не найдено рабочее пространство" });
     }
     const authUser: AuthUser = {
       id: user.id,
