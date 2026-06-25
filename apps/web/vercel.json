@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "installCommand": "npm install --prefix ../..",
+  "installCommand": "npm install --prefix ../.. && mkdir -p node_modules && rm -rf node_modules/styled-jsx && cp -R ../../node_modules/styled-jsx node_modules/styled-jsx",
   "buildCommand": "npm --prefix ../.. run build -w @risklens/shared && npm run build"
 }
