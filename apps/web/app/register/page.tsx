@@ -22,9 +22,13 @@ export default function RegisterPage() {
   const form = useForm<FormData>({ resolver: zodResolver(schema), defaultValues: { name: "", email: "", password: "" } });
 
   async function onSubmit(values: FormData) {
-    const session = await api<any>("/auth/register", { method: "POST", body: JSON.stringify(values) });
-    setSession(session);
-    router.push("/dashboard");
+    try {
+      const session = await api<any>("/auth/register", { method: "POST", body: JSON.stringify(values) });
+      setSession(session);
+      router.push("/dashboard");
+    } catch (error) {
+      form.setError("root", { message: error instanceof Error ? error.message : "Не удалось создать аккаунт" });
+    }
   }
 
   return (
@@ -46,9 +50,10 @@ export default function RegisterPage() {
             <Field label="Пароль" error={form.formState.errors.password?.message}>
               <Input type="password" {...form.register("password")} />
             </Field>
+            {form.formState.errors.root ? <p className="text-sm text-red-700">{form.formState.errors.root.message}</p> : null}
             <Button disabled={form.formState.isSubmitting}>
               <UserPlus className="h-4 w-4" />
-              Зарегистрироваться
+              {form.formState.isSubmitting ? "Создаем аккаунт..." : "Зарегистрироваться"}
             </Button>
           </form>
           <p className="mt-4 text-sm text-muted">

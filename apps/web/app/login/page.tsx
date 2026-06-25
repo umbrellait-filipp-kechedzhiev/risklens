@@ -18,9 +18,13 @@ export default function LoginPage() {
   const form = useForm<FormData>({ resolver: zodResolver(schema), defaultValues: { email: "", password: "" } });
 
   async function onSubmit(values: FormData) {
-    const session = await api<any>("/auth/login", { method: "POST", body: JSON.stringify(values) });
-    setSession(session);
-    router.push("/dashboard");
+    try {
+      const session = await api<any>("/auth/login", { method: "POST", body: JSON.stringify(values) });
+      setSession(session);
+      router.push("/dashboard");
+    } catch (error) {
+      form.setError("root", { message: error instanceof Error ? error.message : "Не удалось войти" });
+    }
   }
 
   return (
@@ -45,7 +49,7 @@ export default function LoginPage() {
             {form.formState.errors.root ? <p className="text-sm text-red-700">{form.formState.errors.root.message}</p> : null}
             <Button disabled={form.formState.isSubmitting}>
               <LogIn className="h-4 w-4" />
-              Войти
+              {form.formState.isSubmitting ? "Входим..." : "Войти"}
             </Button>
           </form>
           <p className="mt-4 text-sm text-muted">
