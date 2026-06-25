@@ -5,15 +5,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        border: "#d8dee8",
-        background: "#f7f9fc",
-        foreground: "#172033",
-        muted: "#667085",
-        primary: "#14532d",
-        accent: "#0f766e"
+        border: "#d9e4f7",
+        background: "#f4f7ff",
+        foreground: "#061532",
+        muted: "#61708a",
+        primary: "#0050ff",
+        accent: "#0038b8"
       },
       boxShadow: {
-        subtle: "0 1px 2px rgba(16, 24, 40, 0.08)"
+        subtle: "0 1px 2px rgba(6, 21, 50, 0.08)"
       }
     }
   },

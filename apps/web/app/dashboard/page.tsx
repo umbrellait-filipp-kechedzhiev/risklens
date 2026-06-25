@@ -20,10 +20,10 @@ export default function DashboardPage() {
 
   return (
     <AppShell>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Проекты</h1>
-          <p className="text-sm text-muted">Оценка риска, статус ревью и следующие действия.</p>
+          <h1 className="text-4xl font-bold tracking-tight">Project risk intelligence</h1>
+          <p className="mt-2 text-base text-muted">Все проекты, риски и следующие действия в одном рабочем экране.</p>
         </div>
         <Link href="/projects/new">
           <Button><PlusCircle className="h-4 w-4" />Новый проект</Button>
@@ -31,13 +31,15 @@ export default function DashboardPage() {
       </div>
       <div className="grid gap-4">
         {projects.map((project) => (
-          <Card key={project.id}>
+          <Card key={project.id} className="hover:border-primary/40">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <Link className="text-lg font-semibold hover:text-primary" href={`/projects/${project.id}`}>{project.name}</Link>
                 <p className="mt-1 max-w-3xl text-sm text-muted">{project.description}</p>
                 <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted">
-                  <span>{project.projectType}</span><span>{project.stage}</span><span>{project.deliveryModel}</span>
+                  <span className="rounded-full bg-blue-50 px-2.5 py-1 text-primary">{project.projectType}</span>
+                  <span className="rounded-full bg-blue-50 px-2.5 py-1 text-primary">{project.stage}</span>
+                  <span className="rounded-full bg-blue-50 px-2.5 py-1 text-primary">{project.deliveryModel}</span>
                 </div>
               </div>
               <div className="min-w-48 text-right">
